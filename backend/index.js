@@ -1,15 +1,23 @@
 const express = require("express");
 const cors = require("cors");
-const app = express();
-const PORT = 5000;
+require("dotenv").config(); // Para variables de entorno
 
-// Middlewares
-app.use(cors()); // Permitir solicitudes desde el frontend
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Configurar CORS
+app.use(cors({
+  origin: process.env.NODE_ENV === "development" 
+    ? "http://localhost:3000" 
+    : "http://localhost:5000"
+}));
+
+// Middleware
 app.use(express.json());
 
-// Ruta de ejemplo
+// Ruta de prueba
 app.get("/api/mensaje", (req, res) => {
-  res.json({ mensaje: "Hola desde el backend!" });
+  res.json({ mensaje: "Hola desde el backend! 🚀" });
 });
 
 // Iniciar servidor

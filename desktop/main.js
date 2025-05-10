@@ -13,12 +13,14 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-    },
+      contextIsolation: false
+    }
   });
 
-  // Cargar el frontend (en desarrollo o producción)
+  // Cargar frontend
   if (process.env.NODE_ENV === "development") {
     mainWindow.loadURL("http://localhost:3000");
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, "../frontend/build/index.html"));
   }
@@ -27,6 +29,8 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-  backendProcess.kill(); // Terminar el proceso del backend
+  if (process.platform !== "darwin") {
+    backendProcess.kill();
+    app.quit();
+  }
 });
